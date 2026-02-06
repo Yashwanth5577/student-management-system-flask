@@ -1,4 +1,4 @@
 flask
-flask-sqlalchemy
-gunicorn
+flask-sqlalchemygunicorn
 pandas
+gunicorn
