@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3>Edit Student</h3>
+
+<form method="POST">
+<input class="form-control mb-2" name="name" value="{{ student.name }}">
+<select class="form-control mb-2" name="branch" required>
+    {% for b in [
+        "CSE","CSE-AI","CSE-AIML","CSE-DS","CSE-ML",
+        "CSE-CyberSecurity","ECE","EEE",
+        "Mechanical Engineering","Civil Engineering"
+    ] %}
+        <option value="{{ b }}" {% if student.branch == b %}selected{% endif %}>
+            {{ b }}
+        </option>
+    {% endfor %}
+</select>
+
+<input class="form-control mb-2" name="email" value="{{ student.email }}">
+<button class="btn btn-success">Update</button>
+</form>
+
+{% endblock %}

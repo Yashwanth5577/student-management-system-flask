@@ -1,0 +1,175 @@
+html, body {
+    min-height: 100%;
+}
+
+/* ========== BASE (LIGHT MODE) ========== */
+body {
+    background-color: #f4f8fb;
+    color: #212529;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.section-title {
+    color: #0d6efd;
+    font-weight: 600;
+}
+
+/* Stats bar */
+.stats-card {
+    background: #0d6efd;
+    color: #ffffff;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+/* Cards */
+.card {
+    background-color: #ffffff;
+    border-radius: 10px;
+}
+
+/* ========== DARK MODE ========== */
+body.dark-mode {
+    background-color: #0b1220;
+    color: #e5e7eb;
+}
+
+/* Navbar */
+body.dark-mode .navbar {
+    background-color: #020617 !important;
+}
+
+/* Headings */
+body.dark-mode .section-title {
+    color: #e5e7eb;
+}
+
+/* Stats */
+body.dark-mode .stats-card {
+    background-color: #1e293b;
+    color: #e5e7eb;
+}
+
+/* Cards */
+body.dark-mode .card {
+    background-color: #020617;
+    color: #e5e7eb;
+    border: 1px solid #1e293b;
+}
+
+/* Forms */
+body.dark-mode .form-control,
+body.dark-mode select {
+    background-color: #020617;
+    color: #e5e7eb;
+    border: 1px solid #334155;
+}
+
+body.dark-mode .form-control::placeholder {
+    color: #94a3b8;
+}
+
+/* Tables */
+body.dark-mode .table {
+    background-color: #020617;
+    color: #e5e7eb;
+}
+
+body.dark-mode .table th,
+body.dark-mode .table td {
+    background-color: #020617 !important;
+    color: #e5e7eb;
+}
+
+body.dark-mode .table-bordered > :not(caption) > * > * {
+    border-color: #1e293b;
+}
+
+/* Alerts */
+body.dark-mode .alert {
+    background-color: #020617;
+    color: #e5e7eb;
+    border: 1px solid #1e293b;
+}
+
+/* Footer */
+body.dark-mode footer {
+    color: #94a3b8;
+}
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 768px) {
+
+    .section-title {
+        font-size: 1.3rem;
+        text-align: center;
+    }
+
+    .stats-card {
+        text-align: center;
+        font-size: 1rem;
+    }
+
+    .navbar-brand {
+        font-size: 1rem;
+    }
+
+    footer {
+        font-size: 0.85rem;
+    }
+}
+/* ===== NAVBAR BUTTON FIX ===== */
+
+/* Light mode */
+.theme-btn {
+    border-color: #0d6efd;
+    color: #0d6efd;
+    font-weight: 500;
+}
+
+.logout-btn {
+    border-color: #dc3545;
+    color: #dc3545;
+    font-weight: 500;
+}
+
+/* Hover effects */
+.theme-btn:hover {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.logout-btn:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Dark mode overrides */
+body.dark-mode .theme-btn {
+    border-color: #e5e7eb;
+    color: #e5e7eb;
+}
+
+body.dark-mode .logout-btn {
+    border-color: #f87171;
+    color: #f87171;
+}
+
+body.dark-mode .theme-btn:hover {
+    background-color: #334155;
+    color: white;
+}
+
+body.dark-mode .logout-btn:hover {
+    background-color: #7f1d1d;
+    color: white;
+}
+/* Light mode navbar */
+.navbar {
+    background-color: #f8f9fa;
+}
+
+/* Dark mode navbar */
+body.dark-mode .navbar {
+    background-color: #020617;
+}
