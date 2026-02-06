@@ -22,7 +22,8 @@ class Student(db.Model):
     name = db.Column(db.String(100), nullable=False)
     roll = db.Column(db.String(50), unique=True, nullable=False)
     branch = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+
     created_at = db.Column(db.DateTime, default=datetime.now)
 
 # ---------------- INDEX / REGISTER ----------------
@@ -40,6 +41,9 @@ def index():
 
         if Student.query.filter_by(roll=roll).first():
             flash("Roll number already exists!", "danger")
+            return redirect(url_for("index"))
+        if Student.query.filter_by(email=email).first():
+            flash("Email already exists!", "danger")
             return redirect(url_for("index"))
 
         student = Student(name=name, roll=roll, branch=branch, email=email)
