@@ -6,9 +6,11 @@ import pandas as pd
 app = Flask(__name__)
 app.secret_key = "secret123"
 
+# Database configuration
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///students.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+# Admin credentials
 ADMIN_USERNAME = "admin"
 ADMIN_PASSWORD = "admin123"
 
@@ -23,12 +25,13 @@ class Student(db.Model):
     email = db.Column(db.String(100), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
 
-# ---------------- INDEX ----------------
+# ---------------- INDEX / REGISTER ----------------
 @app.route("/", methods=["GET", "POST"])
 def index():
     if not session.get("logged_in"):
         return redirect(url_for("login"))
 
+    # ---------- REGISTER STUDENT ----------
     if request.method == "POST":
         name = request.form["name"]
         roll = request.form["roll"]
@@ -42,19 +45,35 @@ def index():
         student = Student(name=name, roll=roll, branch=branch, email=email)
         db.session.add(student)
         db.session.commit()
+
         flash("Student registered successfully!", "success")
         return redirect(url_for("index"))
 
-    students = Student.query.all()
+    # ---------- FILTER & SEARCH ----------
+    search = request.args.get("search")
+    selected_branch = request.args.get("branch")
 
+    query = Student.query
+
+    if search:
+        query = query.filter(Student.name.ilike(f"%{search}%"))
+
+    if selected_branch:
+        query = query.filter_by(branch=selected_branch)
+
+    students = query.order_by(Student.created_at.desc()).all()
+
+    # ---------- BRANCH COUNTS (ALL STUDENTS) ----------
+    all_students = Student.query.all()
     branch_counts = {}
-    for s in students:
+    for s in all_students:
         branch_counts[s.branch] = branch_counts.get(s.branch, 0) + 1
 
     return render_template(
         "index.html",
         students=students,
-        branch_counts=branch_counts
+        branch_counts=branch_counts,
+        selected_branch=selected_branch
     )
 
 # ---------------- EDIT ----------------
@@ -90,7 +109,7 @@ def delete(id):
 # ---------------- DOWNLOAD EXCEL ----------------
 @app.route("/download")
 def download():
-    students = Student.query.all()
+    students = Student.query.order_by(Student.created_at.desc()).all()
 
     data = [{
         "Name": s.name,
@@ -110,10 +129,7 @@ def download():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        if (
-            request.form["username"] == ADMIN_USERNAME and
-            request.form["password"] == ADMIN_PASSWORD
-        ):
+        if request.form["username"] == ADMIN_USERNAME and request.form["password"] == ADMIN_PASSWORD:
             session["logged_in"] = True
             flash("Login successful!", "success")
             return redirect(url_for("index"))

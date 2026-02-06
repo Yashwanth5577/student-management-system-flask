@@ -1,64 +1,159 @@
 html, body {
     min-height: 100%;
+    font-family: "Segoe UI", "Poppins", sans-serif;
 }
 
-/* ========== BASE (LIGHT MODE) ========== */
+/* ================= GLOBAL BACKGROUND ================= */
 body {
-    background-color: #f4f8fb;
-    color: #212529;
-    transition: background-color 0.3s, color 0.3s;
+    background: linear-gradient(135deg, #fdfbfb, #ebedee);
+    color: #1f2937;
+    transition: all 0.3s ease;
 }
 
-.section-title {
-    color: #0d6efd;
-    font-weight: 600;
+/* ================= NAVBAR / HEADER ================= */
+.main-navbar {
+    background: linear-gradient(
+        135deg,
+        #7f00ff,
+        #e100ff,
+        #ff6a00
+    );
+    padding: 18px 0;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.25);
 }
 
-/* Stats bar */
-.stats-card {
-    background: #0d6efd;
+/* APP TITLE */
+.header-title {
+    font-size: 2.6rem;
+    font-weight: 800;
+    font-style: italic;
+    letter-spacing: 2px;
     color: #ffffff;
-    padding: 12px 16px;
-    border-radius: 8px;
-    margin-bottom: 20px;
+    text-transform: uppercase;
+    text-align: center;
+    text-shadow: 0 4px 15px rgba(0,0,0,0.35);
 }
 
-/* Cards */
+/* HEADER BUTTONS */
+.theme-btn,
+.logout-btn {
+    border-radius: 30px;
+    padding: 6px 18px;
+    font-weight: 600;
+    backdrop-filter: blur(8px);
+}
+
+/* Theme button */
+.theme-btn {
+    border: 1px solid #ffffff;
+    color: #ffffff;
+    background: rgba(255,255,255,0.15);
+}
+
+.theme-btn:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+/* Logout button */
+.logout-btn {
+    border: 1px solid #ffb4b4;
+    color: #ffb4b4;
+    background: rgba(255,255,255,0.1);
+}
+
+.logout-btn:hover {
+    background: rgba(255,0,0,0.25);
+    color: #ffffff;
+}
+
+/* ================= SECTION TITLES ================= */
+.section-title {
+    display: flex;
+    align-items: center;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #7f00ff;
+    margin: 30px 0 20px;
+}
+
+/* ICON CIRCLE FIX */
+.section-title i {
+    margin-right: 14px;
+    background: linear-gradient(135deg, #7f00ff, #ff6a00);
+    color: white;
+    padding: 12px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+}
+
+/* ================= STATS CARD ================= */
+.stats-card {
+    background: linear-gradient(135deg, #7f00ff, #ff6a00);
+    color: white;
+    padding: 16px 20px;
+    border-radius: 14px;
+    font-size: 1.1rem;
+    box-shadow: 0 12px 30px rgba(127,0,255,0.35);
+    margin-bottom: 25px;
+}
+
+/* ================= CARDS ================= */
 .card {
-    background-color: #ffffff;
-    border-radius: 10px;
+    background: #ffffff;
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+    animation: fadeUp 0.6s ease;
 }
 
-/* ========== DARK MODE ========== */
+/* ================= BUTTONS ================= */
+.btn {
+    border-radius: 30px;
+    font-weight: 600;
+    padding: 8px 24px;
+}
+
+/* ================= ANIMATION ================= */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================= DARK MODE ================= */
 body.dark-mode {
-    background-color: #0b1220;
+    background: linear-gradient(135deg, #020617, #0f172a);
     color: #e5e7eb;
 }
 
-/* Navbar */
-body.dark-mode .navbar {
-    background-color: #020617 !important;
+/* Dark navbar */
+body.dark-mode .main-navbar {
+    background: linear-gradient(135deg, #020617, #3b0764);
 }
 
-/* Headings */
-body.dark-mode .section-title {
-    color: #e5e7eb;
+/* Dark title */
+body.dark-mode .header-title {
+    color: #f0abfc;
 }
 
-/* Stats */
-body.dark-mode .stats-card {
-    background-color: #1e293b;
-    color: #e5e7eb;
-}
-
-/* Cards */
+/* Dark cards */
 body.dark-mode .card {
     background-color: #020617;
-    color: #e5e7eb;
     border: 1px solid #1e293b;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.7);
 }
 
-/* Forms */
+/* Dark stats */
+body.dark-mode .stats-card {
+    background: linear-gradient(135deg, #3b0764, #7c3aed);
+}
+
+/* Dark inputs */
 body.dark-mode .form-control,
 body.dark-mode select {
     background-color: #020617;
@@ -70,12 +165,8 @@ body.dark-mode .form-control::placeholder {
     color: #94a3b8;
 }
 
-/* Tables */
-body.dark-mode .table {
-    background-color: #020617;
-    color: #e5e7eb;
-}
-
+/* Dark table */
+body.dark-mode .table,
 body.dark-mode .table th,
 body.dark-mode .table td {
     background-color: #020617 !important;
@@ -86,90 +177,25 @@ body.dark-mode .table-bordered > :not(caption) > * > * {
     border-color: #1e293b;
 }
 
-/* Alerts */
-body.dark-mode .alert {
-    background-color: #020617;
-    color: #e5e7eb;
-    border: 1px solid #1e293b;
-}
-
 /* Footer */
 body.dark-mode footer {
-    color: #94a3b8;
+    color: #9ca3af;
 }
-/* ===== MOBILE RESPONSIVE ===== */
+
+/* ================= MOBILE ================= */
 @media (max-width: 768px) {
 
+    .header-title {
+        font-size: 1.6rem;
+        text-align: center;
+    }
+
     .section-title {
-        font-size: 1.3rem;
+        justify-content: center;
         text-align: center;
     }
 
     .stats-card {
         text-align: center;
-        font-size: 1rem;
     }
-
-    .navbar-brand {
-        font-size: 1rem;
-    }
-
-    footer {
-        font-size: 0.85rem;
-    }
-}
-/* ===== NAVBAR BUTTON FIX ===== */
-
-/* Light mode */
-.theme-btn {
-    border-color: #0d6efd;
-    color: #0d6efd;
-    font-weight: 500;
-}
-
-.logout-btn {
-    border-color: #dc3545;
-    color: #dc3545;
-    font-weight: 500;
-}
-
-/* Hover effects */
-.theme-btn:hover {
-    background-color: #0d6efd;
-    color: white;
-}
-
-.logout-btn:hover {
-    background-color: #dc3545;
-    color: white;
-}
-
-/* Dark mode overrides */
-body.dark-mode .theme-btn {
-    border-color: #e5e7eb;
-    color: #e5e7eb;
-}
-
-body.dark-mode .logout-btn {
-    border-color: #f87171;
-    color: #f87171;
-}
-
-body.dark-mode .theme-btn:hover {
-    background-color: #334155;
-    color: white;
-}
-
-body.dark-mode .logout-btn:hover {
-    background-color: #7f1d1d;
-    color: white;
-}
-/* Light mode navbar */
-.navbar {
-    background-color: #f8f9fa;
-}
-
-/* Dark mode navbar */
-body.dark-mode .navbar {
-    background-color: #020617;
 }
