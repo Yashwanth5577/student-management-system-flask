@@ -1,3 +1,4 @@
+from io import BytesIO
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -113,6 +114,9 @@ def delete(id):
 # ---------------- DOWNLOAD EXCEL ----------------
 @app.route("/download")
 def download():
+    if not session.get("logged_in"):
+        return redirect(url_for("login"))
+
     students = Student.query.order_by(Student.created_at.desc()).all()
 
     data = [{
@@ -124,10 +128,18 @@ def download():
     } for s in students]
 
     df = pd.DataFrame(data)
-    file = "students.xlsx"
-    df.to_excel(file, index=False)
 
-    return send_file(file, as_attachment=True)
+    output = BytesIO()
+    df.to_excel(output, index=False, engine="openpyxl")
+    output.seek(0)
+
+    return send_file(
+        output,
+        as_attachment=True,
+        download_name="students.xlsx",
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+
 
 # ---------------- LOGIN ----------------
 @app.route("/login", methods=["GET", "POST"])
