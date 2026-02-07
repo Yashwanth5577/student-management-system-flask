@@ -7,11 +7,10 @@ import pandas as pd
 app = Flask(__name__)
 app.secret_key = "secret123"
 
-# Database configuration
+# ---------------- CONFIG ----------------
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///students.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-# Admin credentials
 ADMIN_USERNAME = "admin"
 ADMIN_PASSWORD = "admin123"
 
@@ -24,25 +23,48 @@ class Student(db.Model):
     roll = db.Column(db.String(50), unique=True, nullable=False)
     branch = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
-
     created_at = db.Column(db.DateTime, default=datetime.now)
 
-# ---------------- INDEX / REGISTER ----------------
+# ---------------- LOGIN ----------------
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        if request.form["username"] == ADMIN_USERNAME and request.form["password"] == ADMIN_PASSWORD:
+            session["logged_in"] = True
+            flash("Login successful!", "success")
+            return redirect(url_for("index"))
+        else:
+            flash("Invalid credentials", "danger")
+    return render_template("login.html")
+
+# ---------------- LOGOUT ----------------
+@app.route("/logout")
+def logout():
+    session.clear()
+    flash("Logged out successfully", "info")
+    return redirect(url_for("login"))
+
+# ---------------- REGISTRATION PAGE ----------------
 @app.route("/", methods=["GET", "POST"])
 def index():
     if not session.get("logged_in"):
         return redirect(url_for("login"))
 
-    # ---------- REGISTER STUDENT ----------
     if request.method == "POST":
-        name = request.form["name"]
+        name = request.form["name"].strip()
         roll = request.form["roll"]
         branch = request.form["branch"]
         email = request.form["email"]
 
+        # Name validation: alphabets + space only
+        if not name.replace(" ", "").isalpha():
+            flash("Name should contain only alphabets", "danger")
+            return redirect(url_for("index"))
+
         if Student.query.filter_by(roll=roll).first():
             flash("Roll number already exists!", "danger")
             return redirect(url_for("index"))
+
         if Student.query.filter_by(email=email).first():
             flash("Email already exists!", "danger")
             return redirect(url_for("index"))
@@ -54,28 +76,53 @@ def index():
         flash("Student registered successfully!", "success")
         return redirect(url_for("index"))
 
-    # ---------- FILTER & SEARCH ----------
+    students = Student.query.all()
+    branch_counts = {}
+    for s in students:
+        branch_counts[s.branch] = branch_counts.get(s.branch, 0) + 1
+
+    return render_template(
+        "index.html",
+        total_students=len(students),
+        branch_counts=branch_counts
+    )
+
+# ---------------- VIEW STUDENTS ----------------
+@app.route("/students")
+def view_students():
+    if not session.get("logged_in"):
+        return redirect(url_for("login"))
+
     search = request.args.get("search")
     selected_branch = request.args.get("branch")
+    filter_type = request.args.get("filter")  # new filter query
 
     query = Student.query
 
     if search:
         query = query.filter(Student.name.ilike(f"%{search}%"))
-
     if selected_branch:
         query = query.filter_by(branch=selected_branch)
 
-    students = query.order_by(Student.created_at.desc()).all()
+    # Apply filter
+    if filter_type == "alphabetical_asc":
+        students = query.order_by(Student.name.asc()).all()
+    elif filter_type == "alphabetical_desc":
+        students = query.order_by(Student.name.desc()).all()
+    elif filter_type == "date_asc":
+        students = query.order_by(Student.created_at.asc()).all()
+    elif filter_type == "date_desc":
+        students = query.order_by(Student.created_at.desc()).all()
+    else:
+        students = query.order_by(Student.created_at.desc()).all()
 
-    # ---------- BRANCH COUNTS (ALL STUDENTS) ----------
-    all_students = Student.query.all()
+    # Branch counts
     branch_counts = {}
-    for s in all_students:
+    for s in Student.query.all():
         branch_counts[s.branch] = branch_counts.get(s.branch, 0) + 1
 
     return render_template(
-        "index.html",
+        "students.html",
         students=students,
         branch_counts=branch_counts,
         selected_branch=selected_branch
@@ -88,14 +135,17 @@ def edit(id):
         return redirect(url_for("login"))
 
     student = Student.query.get_or_404(id)
-
     if request.method == "POST":
-        student.name = request.form["name"]
+        name = request.form["name"].strip()
+        if not name.replace(" ", "").isalpha():
+            flash("Name should contain only alphabets", "danger")
+            return redirect(url_for("edit", id=id))
+        student.name = name
         student.branch = request.form["branch"]
         student.email = request.form["email"]
         db.session.commit()
         flash("Student updated successfully!", "success")
-        return redirect(url_for("index"))
+        return redirect(url_for("view_students"))
 
     return render_template("edit.html", student=student)
 
@@ -104,20 +154,19 @@ def edit(id):
 def delete(id):
     if not session.get("logged_in"):
         return redirect(url_for("login"))
-
     student = Student.query.get_or_404(id)
     db.session.delete(student)
     db.session.commit()
     flash("Student deleted!", "danger")
-    return redirect(url_for("index"))
+    return redirect(url_for("view_students"))
 
-# ---------------- DOWNLOAD EXCEL ----------------
+# ---------------- DOWNLOAD ----------------
 @app.route("/download")
 def download():
     if not session.get("logged_in"):
         return redirect(url_for("login"))
 
-    students = Student.query.order_by(Student.created_at.desc()).all()
+    students = Student.query.order_by(Student.name.asc()).all()
 
     data = [{
         "Name": s.name,
@@ -128,7 +177,6 @@ def download():
     } for s in students]
 
     df = pd.DataFrame(data)
-
     output = BytesIO()
     df.to_excel(output, index=False, engine="openpyxl")
     output.seek(0)
@@ -139,27 +187,6 @@ def download():
         download_name="students.xlsx",
         mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
-
-
-# ---------------- LOGIN ----------------
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        if request.form["username"] == ADMIN_USERNAME and request.form["password"] == ADMIN_PASSWORD:
-            session["logged_in"] = True
-            flash("Login successful!", "success")
-            return redirect(url_for("index"))
-        else:
-            flash("Invalid credentials", "danger")
-
-    return render_template("login.html")
-
-# ---------------- LOGOUT ----------------
-@app.route("/logout")
-def logout():
-    session.clear()
-    flash("Logged out successfully", "info")
-    return redirect(url_for("login"))
 
 # ---------------- RUN ----------------
 if __name__ == "__main__":

@@ -1,28 +1,26 @@
+/* ================= GLOBAL ================= */
 html, body {
     min-height: 100%;
     font-family: "Segoe UI", "Poppins", sans-serif;
-}
-
-/* ================= GLOBAL BACKGROUND ================= */
-body {
-    background: linear-gradient(135deg, #fdfbfb, #ebedee);
-    color: #1f2937;
+    margin: 0;
+    padding: 0;
     transition: all 0.3s ease;
 }
 
-/* ================= NAVBAR / HEADER ================= */
-.main-navbar {
-    background: linear-gradient(
-        135deg,
-        #7f00ff,
-        #e100ff,
-        #ff6a00
-    );
-    padding: 18px 0;
-    box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+/* ================= BODY ================= */
+body {
+    background: linear-gradient(135deg, #fdfbfb, #ebedee);
+    color: #1f2937;
 }
 
-/* APP TITLE */
+/* ================= NAVBAR ================= */
+.main-navbar {
+    background: linear-gradient(135deg, #7f00ff, #e100ff, #ff6a00);
+    padding: 18px 0;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+    border-radius: 0 0 15px 15px;
+}
+
 .header-title {
     font-size: 2.6rem;
     font-weight: 800;
@@ -34,36 +32,25 @@ body {
     text-shadow: 0 4px 15px rgba(0,0,0,0.35);
 }
 
-/* HEADER BUTTONS */
+/* ================= NAVBAR BUTTONS ================= */
 .theme-btn,
 .logout-btn {
     border-radius: 30px;
     padding: 6px 18px;
     font-weight: 600;
-    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
 }
 
-/* Theme button */
 .theme-btn {
     border: 1px solid #ffffff;
     color: #ffffff;
     background: rgba(255,255,255,0.15);
 }
 
-.theme-btn:hover {
-    background: rgba(255,255,255,0.3);
-}
-
-/* Logout button */
 .logout-btn {
     border: 1px solid #ffb4b4;
     color: #ffb4b4;
     background: rgba(255,255,255,0.1);
-}
-
-.logout-btn:hover {
-    background: rgba(255,0,0,0.25);
-    color: #ffffff;
 }
 
 /* ================= SECTION TITLES ================= */
@@ -76,25 +63,16 @@ body {
     margin: 30px 0 20px;
 }
 
-/* ICON CIRCLE FIX */
-.section-title i {
+.section-title .icon-box {
+    width: 46px;
+    height: 46px;
     margin-right: 14px;
     background: linear-gradient(135deg, #7f00ff, #ff6a00);
-    color: white;
-    padding: 12px;
+    color: #fff;
     border-radius: 50%;
-    font-size: 1.2rem;
-}
-
-/* ================= STATS CARD ================= */
-.stats-card {
-    background: linear-gradient(135deg, #7f00ff, #ff6a00);
-    color: white;
-    padding: 16px 20px;
-    border-radius: 14px;
-    font-size: 1.1rem;
-    box-shadow: 0 12px 30px rgba(127,0,255,0.35);
-    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* ================= CARDS ================= */
@@ -111,6 +89,30 @@ body {
     border-radius: 30px;
     font-weight: 600;
     padding: 8px 24px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #7f00ff, #ff6a00);
+    border: none;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    border: none;
+}
+
+/* ================= TABLES ================= */
+.table th, .table td {
+    vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(127,0,255,0.05);
+}
+
+.badge {
+    font-weight: 600;
 }
 
 /* ================= ANIMATION ================= */
@@ -131,71 +133,66 @@ body.dark-mode {
     color: #e5e7eb;
 }
 
-/* Dark navbar */
 body.dark-mode .main-navbar {
     background: linear-gradient(135deg, #020617, #3b0764);
 }
 
-/* Dark title */
-body.dark-mode .header-title {
-    color: #f0abfc;
-}
-
-/* Dark cards */
 body.dark-mode .card {
     background-color: #020617;
     border: 1px solid #1e293b;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.7);
 }
 
-/* Dark stats */
-body.dark-mode .stats-card {
-    background: linear-gradient(135deg, #3b0764, #7c3aed);
+/* ================= LOGIN PAGE (CLEAN & FIXED) ================= */
+.login-card {
+    background: #ffffff !important;
+    color: #1f2937 !important;
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
 }
 
-/* Dark inputs */
-body.dark-mode .form-control,
-body.dark-mode select {
-    background-color: #020617;
-    color: #e5e7eb;
-    border: 1px solid #334155;
+.login-card input.form-control {
+    background: #ffffff;
+    color: #1f2937;
+    border: 1px solid #ccc;
+    border-radius: 10px;
 }
 
-body.dark-mode .form-control::placeholder {
-    color: #94a3b8;
-}
-
-/* Dark table */
-body.dark-mode .table,
-body.dark-mode .table th,
-body.dark-mode .table td {
-    background-color: #020617 !important;
-    color: #e5e7eb;
-}
-
-body.dark-mode .table-bordered > :not(caption) > * > * {
-    border-color: #1e293b;
-}
-
-/* Footer */
-body.dark-mode footer {
+.login-card input::placeholder {
     color: #9ca3af;
+}
+
+.login-card i {
+    color: #ff8c00;
+}
+
+/* ================= FILTER MENU (STUDENTS PAGE) ================= */
+/* Filter menu styling is handled inline with JS toggle.
+   Keeping CSS minimal to avoid conflicts */
+
+#filterMenu .list-group-item {
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#filterMenu .list-group-item:hover {
+    background: #f3f4f6;
+}
+
+/* ================= FOOTER ================= */
+footer {
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
 }
 
 /* ================= MOBILE ================= */
 @media (max-width: 768px) {
-
     .header-title {
         font-size: 1.6rem;
-        text-align: center;
     }
 
     .section-title {
         justify-content: center;
-        text-align: center;
-    }
-
-    .stats-card {
         text-align: center;
     }
 }
